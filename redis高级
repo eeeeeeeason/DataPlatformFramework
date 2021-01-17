@@ -1,0 +1,21 @@
+- 持久化
+  - RDB : 定时以快照方式备份到硬盘
+    - 优点：cpu影响小，恢复速度快
+    - 缺点：定时间隔可能丢失
+    - save [seconds] [changes] 在seconds秒内发生changes变化，生成一次快照  ，会阻塞主进程
+    - BGSAVE 会fork出子进程，子进程调用rdbsave，保存完毕发送信号给主进程，
+  - AOF: 所有操作写日志到硬盘
+    - 优点：不丢数据
+    - 缺点：对cpu影响大，占用空间大
+    - 类似mysql的beanlog
+    - 三种设置方式
+      - appendfsync always
+      - appendsync second
+      - appendsync no
+  - cenel做数据同步，专门针对mysql的beanlog
+  - 定时过期：实时扫描，到时删除
+    - cpu要关注每个key的有效时间，占用内存小，但cpu工作量大
+  - 惰性过期：查询发现过期删
+    - 内存占用大，过期的内容要到下一次访问才会删除
+  定期过期：隔一定时间扫描
+  
