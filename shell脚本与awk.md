@@ -86,7 +86,17 @@
      - linux处理mysql备份
       ```shell
         #mysqldump -u root -p 123456 --host
-    
+     - 创建用户
+      ```shell
+      useradd eason
+      passwd eason
+      visudo
+      # 第100行
+      eason      ALL=(ALL)       ALL
+      #创建es文件夹且给eason用户权限
+      mkdir -p /export/server/es
+      chown -R itcast:itcast /export/server/es
+      ```
   - awk
    - awk文本处理命令,命令要注意内外引号的时候，外边单引号里边双引号
     - $0, $1, $2 ... $n
