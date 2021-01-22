@@ -1,14 +1,38 @@
- - 背景: 主从/主备 /有疑问
- - 什么是数据，数据分析(数据处理)，数据挖掘(价值化信息)，什么是大数据 
-    -  大数据特征
- - 纵向布局，横向布局
-   - 全文检索
-    - 结构化，非结构化，倒排索引（分词得到的关键字获取所在文章索引）
+# 理解ElasticSearch概念模型
+ - 背景: master&worker/主从/主备
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/35fce1fe748a4a26bc4634e84af9bd27~tplv-k3u1fbpfcp-watermark.image)
+- master&worker核心思想是分而治之，将一个原始任务分解为若干个语义等同的子任务,并由专门的工作者线程来并行执行这些任务,原始任务的结果是通过整合各个子任务的处理结果形成的
+ 	- 现实表现为两种模式主从和主备
+    	- 主备：备份机器专心将主节点数据备份，耐心等待主机挂掉的时候取代，有瓶颈受限于主节点的读写能力，且在网络波动或其他异常时候可能导致备份结点误判导致主主模式
+        ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87c18b8189364456a9c30817f78f1fe0~tplv-k3u1fbpfcp-watermark.image)
+    	- 主从：从节点负责信息读取的功能，主节点负责写入，并输出到从节点
+        ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42f5936daa0e43f3bd20fc4e0d0aef75~tplv-k3u1fbpfcp-watermark.image)
+## es模型
+  - 两套主从，既保证了稳定性和容错性
+  	- master&worker
+    	- 1.管理从节点状态/master
+        - 2.对索引库curd/master
+        - 3.数据存储查询/worker
+    - 主shard和分片shard
+    	- 写入时只对主shard写入，读取时二者皆可
+    ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd2c959e4e554ea8a9e3f08ee9e487ba~tplv-k3u1fbpfcp-watermark.image)
+----------------------------------------------
+- 搜索工具发展进程
     - lucene jar包
-    - 比较solr
-      - json,自行管理分布式状态
+    - solr
+    - es与solr比较
+      - es需要json,自行管理分布式状态
       - solr需要zookeeper管理分布式状态，传统搜索应用中效率高，实时搜索效率低
- - 搜索的过程
+      - https://www.cnblogs.com/jajian/p/9801154.html
+ - es索引库结构与关系型数据库比较、
+ 	- index ==== database
+    - type  ==== table
+    - document ==== record
+    - field ==== field
+    - mapping约束字段
+-------------------------------------------------
+ - es性质
+ 	- 全文搜索引擎，采用的是倒排索引，倒排索引即将分词后的各个关键词与对应文章关联后插入索引表。实现找出该词的文章时间复杂度在o(1)
  - 分词
     - 需求：客户输入关键词，需要将相关文章返回到客户端
     - 步骤1.先构建自身文章的索引。倒排索引
@@ -26,29 +50,4 @@
     - 准确数据类型：是keyword的话直接索引匹配
     - 全文文本类型：需要分词
     - 关系型数据库搜索弊端
-    - es介绍。非关系型
-      - 两套主从：结点主从，shard主从
-        - 主节点(master)管理从结点(worker)，
-          - master 负责索引的crud
-          - worker 储存查询
-        - primaryshard主节点管理从结点replica shard : 主：负责数据读写，写入数据时只往primary写，读取在两者都行
-      - 海量数据存储，分布式存储与计算能力
-      - 开箱即用
-      - 传统数据库补充,
-      - 数据分片备份存储到不同的结点
-      - 角色分析
-        - master主节点
-        - worker，slaver从结点
-        - primary shard
-        - replication shard 分片
-        - index
-        - type
-        - id
-        - document
-      - 结构
-        - index 相当于数据库
-          - type高版本一个index只有一个type，相当于表
-            - document 记录
-              - filed 字段
-                - mapping（修饰filed，限制filed类型）
-
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e111af9f8e5e4be3b39dcac9d20ddb2f~tplv-k3u1fbpfcp-watermark.image)
