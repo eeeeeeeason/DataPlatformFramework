@@ -33,6 +33,8 @@
 - set hive.exec.orc.zerocopy=true
 ### 数据倾斜优化操作
 - 执行mapreduce，一个reduce拿到的数据量远大于其他
+- 如何检查sql是否存在数据倾斜，在jobhistory中查看该工作的reduce的数量
+  - 默认一个reduce处理1gb数据，
 - group by 
   - 提前聚合，combiner
     - 小combiner:在一个mr中通过combiner方式来解决数据倾斜问题
@@ -55,5 +57,6 @@
   - 不管运行期优化，还是编译期优化，都会将倾斜的key单独找一个mr来运行，运行后将得到的结果和之前的mr进行union all合并操作，如果不了解数据就开运行期，或者都开，非常熟悉就开编译期
     - set hive.optimize.union.remove=true
     - 一旦开启此配置之后，在执行union all合并操作时候，可以不走mr，也不会再合并为一个文件，执行让两个mr结果输出到目标地即可
-### 数据倾斜优化操作q
-### 数据倾斜优化操作
+### 关联优化
+- set hive.optimize.correlation=true
+- 同一条sql中有一些group by，join触发的shuffle是相同的可以选择让其共享，以此来
