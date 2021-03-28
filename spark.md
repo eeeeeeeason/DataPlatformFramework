@@ -38,4 +38,7 @@
 
 ### 
 - Driver申请cpu-->经过appmaster---rs----nodemanager--container资源隔离--task
-### spark运行模式
+# 问题汇总综合
+- client端启动为什么会导致网络传输数据激增，因为传输的仅仅是命令和结果
+- spark的shuffle和hadoop的shuffle区别，为什么spark shuffle后分区数量不发生改变
+- 另分区中内容乱序的目的是什么
