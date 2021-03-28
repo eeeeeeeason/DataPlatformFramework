@@ -1,0 +1,23 @@
+## 架构
+- hmaster
+- hregionserver
+  - hlog
+  - region
+    - store模型
+      - memorystore
+      - storefile
+- zookeeper
+- hdfs
+## 数据模型
+- table
+- rowkey ，字典序，设计原则：短，数字类型用long，避免最前面不要有时序相关，唯一性
+- 列
+- 时间戳，默认一个版本
+- 单元格
+- 设置预分区
+## 三大机制
+- flush
+  - 原本写日志，再到memstore，达到128m溢写到storefile，3个storefile，启动compact合并
+- compact
+- split
+  - 根据分区把大的拆成小的
