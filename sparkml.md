@@ -7,6 +7,13 @@
   - 有价值信息
 
 - 机器学习和大数据联系
+  - 流程
+    - ![image](https://user-images.githubusercontent.com/27959851/114643024-79479b80-9d07-11eb-8782-05fa48b1d508.png)
+    - 首先判断任务是否是机器学习任务
+    - 根据数据集是否有标签列，有标签列可以用监督学习的分类或者回归
+    - 确定好是分类还是回归问题
+    - 特征工程80%(数值化，特征向量化，归一化，卡方校验)，利用数据+算法构建模型，根据训练好的模型进行预测
+    - 没有标签列，通过聚类算法实现间接分类，继续完成特征工程
 
   - 大数据
     - 数据存储+统计
@@ -140,18 +147,23 @@
   - k则交叉验证
     - 10则交叉验证，将数据集随机平均切分为10等分，获取其中一份数据作为测试集，其余做训练集，可以训练出10个模型，平均损失
     - 用于超参数验证
-
+- 网格验证
 ## sparkmllib
 
 - guide（五大特征）
-  - ml算法：分类，回归，聚类，降维，协同过滤
-  - featurization特征工程：特征抽取（主要是为图片和文本等非结构化数据处理），transformation（encoder）,dimensionality reduction 降维， selecttion 特征选择
+  - ml算法：分类(监督)，回归(监督)，聚类(非监督)，降维，协同过滤
+  - featurization特征工程：特征抽取（主要是为图片和文本等非结构化数据处理），transformation（encoder）(非数值化转化，归一化转化),dimensionality reduction 降维， selecttion 特征选择
   - pipelines管道，各算法融合
   - persistence持久化，保存模型
   - utilities工具，线性代数统计学
-- dataframe是主要的api,过去有spark.ml是基于rdd的代码冗余，现在用mllib基于df
+- 两种api,rdd和dataframe.dataframe是主要的api,过去有spark.ml是基于rdd的代码冗余，现在用mllib基于df
   - df可以用pipeline加快计算,datasource，sql查询，tusten,catalyst,多语言支持
   - ![image](https://user-images.githubusercontent.com/27959851/114333045-0361f980-9b7a-11eb-8d37-100670bbac1c.png)
+- spark架构
+  - netlib-java数值运算
+  - breeze 矩阵运算
+  - vector 向量接口
+  - matrix 矩阵接口
 - usg中重要算法包括随机森林，线性回归，聚类算法
 - sparkMLlib 数据结构
   - 向量
@@ -168,8 +180,8 @@
     - 连续值
       - binarizer二值化， 
       - bucketizer 分箱操作  
-      - quanttileDiscreater
-    - 特征向量
+      - quanttileDiscreater 分位数转换
+    - 特征组合
       - vectorassembler 特征向量集成
         - 离散特征值转为特征向量
         - ******************
@@ -193,7 +205,7 @@
     - 根据id3,c4.5,cart树判断
       - 信息熵 香农，表示信息分布均匀程度，所以我们需要找到一个数据分布的分割位置，可以用于信息的分类，要找一个信息熵小的，有助于得出更多细分
         - h = -sum(pi*log(pi))
-      - id3:选择属性判断节点，建立决策树，引入信息增益，获取信息量
+      - id3:输入数据集，输出决策树。选择属性判断节点，建立决策树，引入信息增益，获取信息量
         - a特征的信息增益= 总体的信息熵-以a节点作为分支节点信息熵
         - 信息增益可以用来衡量可否更加好的切分训练数据集
       - c4.5 根据信息熵增益率解决取值较多的不足，譬如不小心把主键id作为了分类可以避免
@@ -202,5 +214,23 @@
     - 防止过拟合
     - 先剪枝
       - 提前结束决策树增长，限制树高，但是受到主观性影响
+      - 指定超参数（训练之前事先指定的参数）
     - 后剪枝
       - 生长完毕后再减，要考虑提供替换节点的容错性，mep最小错误率剪枝技术，选择剪枝一定不能让错误率上升过快
+  - 参数处理，算法选择，不纯度
+    - 参数是
+      - 连续的要处理为离散，分类的要处理
+      - 深度控制
+    - 不纯度：geni基尼, entropy信息熵
+- 评估模型
+  - 真正率，假正率，精确率，准确率，ROC（受试者工作曲线），AUC（二分类曲线下面积[](url)）
+  - ![image](https://user-images.githubusercontent.com/27959851/114652953-8a99a380-9d19-11eb-99de-660957079c50.png)
+  - 交叉验证 CrossValidator
+  - 网格验证 ParamGridBuilder
+- 什么时候用fit什么时候用transform
+  - 继承自transform可以直接transform，继承自estimator要先fit再transform
+- USG模型引入
+  - 什么是USG模型
+    - user shopping gender ,用户在一段时间内购买商品的数量来判断用户的性别是男还是女
+  - 如何实现USG
+  - 实际意义和价值
