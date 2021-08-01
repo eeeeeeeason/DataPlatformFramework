@@ -1,0 +1,14 @@
+## docker配置
+- 常用命令
+  - exec: 
+    - docker exec -it [docker name or id] bash
+    - 退出就用exit
+- 环境
+  - mongodb
+    - docker pull mongodb
+    - docker run -p 27017:27017 -v <LocalDirectoryPath>:/data/db --name docker_mongodb -d mongo
+      - -v配置数据卷
+  - redis
+    -  docker run -p 6379:6379 -v /Users/yucheng/Desktop/dockerVolumn/redisVolumn --name docker_redis -d redis
+      - redis容器中启动命令为redis-cli 注意区别
+  - node-koa
